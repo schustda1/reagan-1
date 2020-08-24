@@ -21,10 +21,8 @@ class PSQL(Subclass):
 
         # hard coding b/c I don't care
         if self.server in ['george','scp']:
-            # get a connection, if a connect cannot be made an exception will be raised here
-            self.conn = psycopg2.connect(**connection)
-            # conn.cursor will return a cursor object, you can use this cursor to perform queries
-            self.cursor = self.conn.cursor()
+            self.conn = create_engine('''postgres+psycopg2://{user}:{password}@{host}/{dbname}'''.format(**connection), connect_args={'sslmode':'prefer'})
+
         else:
             self.conn = create_engine('''redshift+psycopg2://{user}:{password}@{host}:{port}/{dbname}'''.format(**connection), connect_args={'sslmode':'prefer'})
 
