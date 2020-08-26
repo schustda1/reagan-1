@@ -5,9 +5,9 @@ with open("requirements.txt") as f:
 
 setup(
     name="reagan",
-    version="1.5.8",
-    description="Package for streamlining credentials, data connections, and data flow",
-    url="https://github.com/Carat-GM-TechnologyOperations/reagan",
+    version="1.5.9",
+    description="Package for streamlining credentials, connections, and data flow",
+    url="https://github.com/schustda/reagan",
     author="Douglas Schuster",
     author_email="douglas.schuster@carat.com",
     packages=["reagan"],
