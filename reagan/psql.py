@@ -39,6 +39,35 @@ class PSQL(Subclass):
             print ('Executing Query:\n\n',format(query,reindent=True,keyword_case='upper'))
         return pd.read_sql(query,self.conn)
 
+    def to_dict(self, schema, table, key, value):
+        """
+        Executes query and returns results into a dict via sqlalchemy
+            - schema (string): schema of the table to pull
+            - table (string): table name of the table to pull
+            - key (string): column name in the table to be used as the dictionary key
+            - value (string): column name in the table to be used as the dictionary value
+        """
+        df = self.to_df(f'''SELECT DISTINCT {key} AS key, {value} AS value FROM {schema}.{table}''')
+        return {row["key"]: row["value"] for idx, row in df.iterrows()}
+
+    def to_list(self, query):
+        """
+        Executes query and returns results into a list via sqlalchemy
+            - query (string): The SQL query to execute. Should be a SELECT
+        """
+        df = self.to_df(query)
+        return df.values.flatten().tolist()
+
+    def execute(self, query, replacements={}):
+        """
+        Executes query and returns results into a pandas dataframe via sqlalchmey
+            - query (string): The SQL query to execute. Should be a SELECT
+            - replacements (dict): Modifies the query and replaces any instance of [key] with [value]
+        """
+        query = self._format_query(query, replacements)
+        with self.conn.connect() as con:
+            con.execute(query)
+
     def to_sql(self, df, schema, table, if_exists='fail', index = False, chunksize = 1000):
         '''
         Inserts a pandas dataframe into the specified table in DADL.
@@ -54,7 +83,21 @@ class PSQL(Subclass):
             chunksize=chunksize,
         )
 
+    def get_scalar(self, query, replacements={}):
+        """
+        Executes query and returns a single result
+            - query (string): The SQL query to execute. Should be a SELECT
+            - replacements (dict): Modifies the query and replaces any instance of [key] with [value]
+        """
+        query = self._format_query(query, replacements)
+        return self.conn.scalar(query)
+
 if __name__ == "__main__":
-    q = PSQL('pdw_gm_o')
-    p = PSQL('george')
+    q = PSQL('scp')
+    # q2 = '''DELETE FROM items.parameters WHERE True'''
+    # q1 = '''INSERT INTO items.parameters (name, value_int) VALUES ('max_post_number', 153009616)'''
+    # q.execute(q2)
+    a = q.to_list('SELECT value_int FROM items.parameters')
+    b = q.to_dict(schema = 'items', table = 'parameters', key='name',value = 'value_int')
+    c = q.get_scalar('SELECT MAX(value_int) FROM items.parameters')
     # df = p.to_df('''SELECT * FROM carat_gm.dcm_date limit 1000''')
