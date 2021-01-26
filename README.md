@@ -8,11 +8,11 @@ AWS Secret and Client Secret must be added to environment variables before use.
 
 ## Package Installation
 
-```pip install git+ssh://git@github.com/schustda/reagan```
+```pip install reagan```
 
 or
 
-```python -m pip install git+ssh://git@github.com/schustda/reagan```
+```python -m pip install reagan```
 
 ## Modules
 
@@ -154,6 +154,40 @@ ads = dcm.list(obj, arguments=arguments, all=all)
 
 # Pulling a dataframe of the cities
 df_ads = dcm.to_df(obj=obj, columns=columns, all=all, arguments=arguments)
+```
+
+### SA360
+--------------
+
+Manages interactions with the SA360 API using Google's Python libraries.
+
+ **Credentials**
+ 
+Managed in AWS Parameter Store. Interactions with DCM made via service account.
+
+```python
+/sa360/service_account_path = [path to the servie account .json file] 
+```
+**Functions**
+
+*reports_to_df* - Makes a list call to DCM and returns a generator that yields a pandas dataframe with 1000000 rows with the report specifications
+
+**Examples**
+
+```python
+from reagan import SA360
+
+# first connect to DCM via service account by instanciating the class
+sa = SA360()
+
+# set the report specifications
+    report_type = 'campaign'
+    agency_id = 123456
+    columns = ['campaignId','campaign','campaignStartDate','campaignEndDate']
+
+# Look through the generator to get files
+    for df in sa.reports_to_df(report_type = report_type, agency_id = agency_id, columns=columns):
+        print(df.head())
 ```
 
 ### Drive
