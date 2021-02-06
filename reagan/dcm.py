@@ -9,10 +9,10 @@ from retrying import retry
 
 
 class DCMAPI(Subclass):
-    def __init__(self, networkId=8334, version = 'v3.4', verbose=0, profile_id=None, service_account = 'v1'):
+    def __init__(self, networkId=8334, version = 'v3.4', verbose=0, profile_id=None, service_account_alias = None):
         super().__init__(verbose=verbose)
         self.version = version
-        self.service_account_filepath = self.get_parameter("dcm").get_parameter("service_account_path")
+        self.service_account_filepath = self.get_parameter("dcm").get_parameter("service_account_path" if not service_account_alias else service_account_alias)
         self._create_service()
         self.dcm_api_calls = 0
 
@@ -232,7 +232,7 @@ class DCMAPI(Subclass):
 
 if __name__ == "__main__":
 
-    dcm = DCMAPI(networkId = 8334, verbose=1)
+    dcm = DCMAPI(networkId = 8334, verbose=1,service_account_alias='service_account_path2')
     columns = ['id','name','accountId','advertiserId','campaignId']
     obj='placements'
     ids = [252947455
