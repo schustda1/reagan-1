@@ -181,13 +181,13 @@ from reagan import SA360
 sa = SA360()
 
 # set the report specifications
-    report_type = 'campaign'
-    agency_id = 123456
-    columns = ['campaignId','campaign','campaignStartDate','campaignEndDate']
+report_type = 'campaign'
+agency_id = 123456
+columns = ['campaignId','campaign','campaignStartDate','campaignEndDate']
 
-# Look through the generator to get files
-    for df in sa.reports_to_df(report_type = report_type, agency_id = agency_id, columns=columns):
-        print(df.head())
+# Loop through the generator to get files
+for df in sa.reports_to_df(report_type = report_type, agency_id = agency_id, columns=columns):
+    print(df.head())
 ```
 
 ### Drive
