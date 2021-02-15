@@ -10,7 +10,7 @@ class SA360(Subclass):
     def __init__(self, version="v2", verbose=0):
         super().__init__(verbose=verbose)
         self.version = version
-        self.service_account_filepath = self.get_parameter("sa360").get_parameter("service_account_path"        )
+        self.service_account_filepath = self.get_parameter_value("/sa360/service_account_path")
         self._create_service()
         self.dcm_api_calls = 0
 
@@ -53,7 +53,7 @@ class SA360(Subclass):
         report_file = request.execute()
         return pd.read_csv(BytesIO(report_file))
 
-    def reports_to_df(self, agency_id, report_type, columns):
+    def reports_to_df(self):
         """
         Returns a generator that yields a pandas dataframe with 1000000 rows with the report specifications
             - agency_id (int): Id of the Agency used to make the calls
@@ -62,12 +62,12 @@ class SA360(Subclass):
         """
 
         body = {
-            "reportScope": {"agencyId": agency_id},
-            "reportType": report_type,
-            "columns": [{"columnName": col} for col in columns],
-            "downloadFormat": "csv",
-            "maxRowsPerFile": 1000000,
-            "statisticsCurrency": "agency",
+            "reportType": 'advertiser',
+            "columns": [
+                { "columnName": "agency" },
+                { "columnName": "agencyId" },
+            ],
+            "statisticsCurrency": "usd"   
         }
 
         # 1. Request Report
@@ -88,11 +88,11 @@ class SA360(Subclass):
 
 
 if __name__ == "__main__":
-    pass
+    # pass
     # account report
     # report_type = 'campaign'
     # agency_id = 20700000001049589
     # columns = ['campaignId','campaign','campaignStartDate','campaignEndDate']
-    # sa = SA360(verbose=1)
-    # for df in sa.reports_to_df(report_type = report_type, agency_id = agency_id, columns=columns):
-    #     pass
+    sa = SA360(verbose=1)
+    for df in sa.reports_to_df():
+        pass

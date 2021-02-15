@@ -12,7 +12,7 @@ class DCMAPI(Subclass):
     def __init__(self, networkId=8334, version = 'v3.4', verbose=0, profile_id=None, service_account_alias = None):
         super().__init__(verbose=verbose)
         self.version = version
-        self.service_account_filepath = self.get_parameter("dcm").get_parameter("service_account_path" if not service_account_alias else service_account_alias)
+        self.service_account_filepath = self.get_parameter_value(f'''/dcm/{"service_account_path" if not service_account_alias else service_account_alias}''')
         self._create_service()
         self.dcm_api_calls = 0
 

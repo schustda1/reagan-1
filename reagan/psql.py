@@ -10,7 +10,7 @@ class PSQL(Subclass):
         super().__init__()
         self.verbose = verbose
         self.server = server
-        self.connection_string = eval(self.get_parameter("postgres").get_parameter(self.server))
+        self.connection_string = eval(self.get_parameter_value(f"/postgres/{self.server}"))
         self._connect_to_database(self.connection_string)
 
     def _connect_to_database(self,connection):
@@ -19,7 +19,7 @@ class PSQL(Subclass):
         opens the database connection.
         '''
 
-        # hard coding b/c I don't care
+        # hard coding b/c
         if self.server in ['george','scp']:
             self.conn = create_engine('''postgres+psycopg2://{user}:{password}@{host}/{dbname}'''.format(**connection), connect_args={'sslmode':'prefer'})
 

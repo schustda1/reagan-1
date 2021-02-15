@@ -8,7 +8,7 @@ from googleapiclient.http import MediaIoBaseDownload
 class Drive(Subclass):
     def __init__(self, verbose=0):
         super().__init__(verbose=verbose)
-        self.service_account_filepath = self.get_parameter("drive").get_parameter('service_account_path')
+        self.service_account_filepath = self.get_parameter_value("/drive/service_account_path")
         self._create_service()
 
     @retry(stop_max_attempt_number=10, wait_fixed=10000)

@@ -7,7 +7,7 @@ import smartsheet
 class SmartsheetAPI(Subclass):
     def __init__(self):
         super().__init__()
-        self.bearer_token = self.get_parameter("smartsheets").get_parameter("bearer_token")
+        self.bearer_token = self.get_parameter_value("/smartsheets/bearer_token")
         self.conn = smartsheet.Smartsheet(self.bearer_token)
 
     def get_attachment_url(self, sheet_id, attachment_id):

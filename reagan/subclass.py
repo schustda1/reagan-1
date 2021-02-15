@@ -1,14 +1,20 @@
-from reagan.ssm_parameter_store import SSMParameterStore
 from pandas.io.json import json_normalize
 import pandas as pd
 import numpy as np
+import boto3
 import os
 
 
-class Subclass(SSMParameterStore):
-    def __init__(self, verbose=0):
+class Subclass(object):
+    def __init__(self, verbose=0, region="us-east-2"):
         super().__init__()
         self.verbose = verbose
+        self.region = region
+        self.ssm = boto3.client("ssm",region_name=self.region,aws_access_key_id=os.environ["AWS_ACCESS_KEY"],aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"])
+
+    def get_parameter_value(self,parameter_name):
+        parameter = self.ssm.get_parameter(Name=parameter_name,WithDecryption=True)
+        return parameter['Parameter']['Value']
 
     def vprint(self, obj):
         if self.verbose:

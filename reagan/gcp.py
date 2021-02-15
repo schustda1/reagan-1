@@ -6,10 +6,10 @@ from google.oauth2 import service_account
 class GCP(Subclass):
     def __init__(self, verbose=0):
         super().__init__(verbose=verbose)
-        self.service_account_filepath = self.get_parameter("gcp").get_parameter('service_account_path')
-        self.project = self.get_parameter("gcp").get_parameter('project')
-        self.region = self.get_parameter("gcp").get_parameter('region')
-        self.zone = self.get_parameter("gcp").get_parameter('zone')
+        self.service_account_filepath = self.get_parameter_value("/gcp/service_account_path")
+        self.project = self.get_parameter_value("/gcp/project")
+        self.region = self.get_parameter_value("/gcp/region")
+        self.zone = self.get_parameter_value("/gcp/zone")
         self._create_compute()
 
     def _create_compute(self):

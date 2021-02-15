@@ -10,7 +10,7 @@ class SQLServer(Subclass):
     def __init__(self, server):
         super().__init__()
         self.server = server
-        self._connect_to_database(self.get_parameter("sqlserver").get_parameter(self.server))
+        self._connect_to_database(self.get_parameter_value(f"/sqlserver/{self.server}"))
 
     def _connect_to_database(self, connection):
 
@@ -110,6 +110,6 @@ class SQLServer(Subclass):
 if __name__ == "__main__":
     ss = SQLServer("102")
     sites = ss.to_dict(
-        schema="glops", table="DCM_Sites", key="Site_Id_DCM", value="Site_DCM"
+        schema="gcm", table="Site", key="Site_Id", value="Site"
     )
 
