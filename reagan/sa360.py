@@ -53,7 +53,7 @@ class SA360(Subclass):
         report_file = request.execute()
         return pd.read_csv(BytesIO(report_file))
 
-    def reports_to_df(self):
+    def reports_to_df(self, agency_id, report_type, columns):
         """
         Returns a generator that yields a pandas dataframe with 1000000 rows with the report specifications
             - agency_id (int): Id of the Agency used to make the calls
@@ -62,12 +62,12 @@ class SA360(Subclass):
         """
 
         body = {
-            "reportType": 'advertiser',
-            "columns": [
-                { "columnName": "agency" },
-                { "columnName": "agencyId" },
-            ],
-            "statisticsCurrency": "usd"   
+            "reportScope": {"agencyId": agency_id},
+            "reportType": report_type,
+            "columns": [{"columnName": col} for col in columns],
+            "downloadFormat": "csv",
+            "maxRowsPerFile": 1000000,
+            "statisticsCurrency": "agency",
         }
 
         # 1. Request Report
