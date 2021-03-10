@@ -19,13 +19,7 @@ class PSQL(Subclass):
         opens the database connection.
         '''
 
-        # hard coding b/c
-        if self.server in ['george','scp']:
-            self.conn = create_engine('''postgres+psycopg2://{user}:{password}@{host}/{dbname}'''.format(**connection), connect_args={'sslmode':'prefer'})
-
-        else:
-            self.conn = create_engine('''redshift+psycopg2://{user}:{password}@{host}:{port}/{dbname}'''.format(**connection), connect_args={'sslmode':'prefer'})
-
+        self.conn = create_engine('''{engine}+psycopg2://{user}:{password}@{host}:{port}/{dbname}'''.format(**connection), connect_args={'sslmode':'prefer'})
 
     def to_df(self,query_input,replacements={}):
         '''
@@ -94,10 +88,12 @@ class PSQL(Subclass):
 
 if __name__ == "__main__":
     q = PSQL('scp')
+    q = PSQL('george')
+    q = PSQL('pdw_gm_o')
     # q2 = '''DELETE FROM items.parameters WHERE True'''
     # q1 = '''INSERT INTO items.parameters (name, value_int) VALUES ('max_post_number', 153009616)'''
     # q.execute(q2)
-    a = q.to_list('SELECT value_int FROM items.parameters')
-    b = q.to_dict(schema = 'items', table = 'parameters', key='name',value = 'value_int')
-    c = q.get_scalar('SELECT MAX(value_int) FROM items.parameters')
+    # a = q.to_list('SELECT value_int FROM items.parameters')
+    # b = q.to_dict(schema = 'items', table = 'parameters', key='name',value = 'value_int')
+    # c = q.get_scalar('SELECT MAX(value_int) FROM items.parameters')
     # df = p.to_df('''SELECT * FROM carat_gm.dcm_date limit 1000''')
