@@ -62,18 +62,18 @@ class Ihub(Subclass):
             if data:
                 if id_type == 'missing_post':
                     output['status'] = 'Error'
-                    output['error_message'] = data.text.strip()
+                    output['error_message'] = data.text
                     return output
                 if id_type == 'deleted_post':
                     output['status'] = 'Error'
-                    output['error_message'] = data.text.strip()
+                    output['error_message'] = data.text
                     return output
 
         for id_type, id_code in site_id_codes['active'].items():
             data = soup.find(id=id_code)
             if data:
                 if id_type == 'message':
-                    body = data.text.strip()
+                    body = data.text
                     tb = TextBlob(body)
                     output['sentiment_polarity'], output['sentiment_subjectivity'] = tb.sentiment
                 if id_type == 'post_number':
@@ -81,8 +81,8 @@ class Ihub(Subclass):
                 if id_type == 'message_date':
                     output['message_date'] = pd.to_datetime(data.text)
                 if id_type == 'ihub_code':
-                    output['ihub_code'] = data["href"].replace("/", "")
-        return output
+                    output['ihub_code'] = data["href"]
+        return {k:v.strip().replace('/','').replace('%','') if type(v) == str else v for k,v in output.items()}
 
 
 if __name__ == "__main__":
@@ -96,7 +96,11 @@ if __name__ == "__main__":
     # other board
     # message_id = 144802665
     # message_id = 77864629
-    message_id = 1309083
+    message_id = 159246431
 
     s = Ihub()
-    z = s.page_response(message_id)
+    # z = s.page_response(message_id)
+    # id_code = 'ctl00_CP1_bbc1_hlBoard'
+    # data = z.find(id=id_code)
+    # text = data['href']
+    i = s.get_message_data(message_id)
