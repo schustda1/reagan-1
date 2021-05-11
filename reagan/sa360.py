@@ -53,7 +53,7 @@ class SA360(Subclass):
         report_file = request.execute()
         return pd.read_csv(BytesIO(report_file))
 
-    def reports_to_df(self, agency_id, report_type, columns):
+    def reports_to_df(self, agency_id, report_type, columns, timerange=None):
         """
         Returns a generator that yields a pandas dataframe with 1000000 rows with the report specifications
             - agency_id (int): Id of the Agency used to make the calls
@@ -69,6 +69,9 @@ class SA360(Subclass):
             "maxRowsPerFile": 1000000,
             "statisticsCurrency": "agency",
         }
+
+        if timerange:
+            body['timeRange'] = timerange
 
         # 1. Request Report
         report_request = self.service.reports().request(body=body)
