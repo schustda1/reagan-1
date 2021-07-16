@@ -66,7 +66,7 @@ class SA360(Subclass):
             "reportType": report_type,
             "columns": [{"columnName": col} for col in columns],
             "downloadFormat": "csv",
-            "maxRowsPerFile": 10000,
+            "maxRowsPerFile": 1000000,
             "statisticsCurrency": "agency",
         }
 
