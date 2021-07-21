@@ -51,7 +51,7 @@ class Fidelity(Subclass):
 
         url = self.base_url + symbol.upper()
         df = pd.read_csv(url, index_col="Date").iloc[:-18]
-        df["Date"] = df.index
+        df["Date"] = pd.to_datetime(df.index)
         df = df.reset_index(drop=True)
         df.columns = map(lambda x: x.lower(), df.columns)
         df["volume"] = df["volume"].astype(int)
