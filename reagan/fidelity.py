@@ -6,7 +6,7 @@ import pandas as pd
 class Fidelity(Subclass):
     def __init__(self):
         super().__init__()
-        self.base_url = self.get_parameter('/fidelity/base_url')
+        self.base_url = self.get_parameter_value('/fidelity/base_url')
 
     def _add_zero_days(self, df):
 
