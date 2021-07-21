@@ -6,7 +6,7 @@ import pandas as pd
 class Fidelity(Subclass):
     def __init__(self):
         super().__init__()
-        self.base_url = self.get_parameter('/fidelity/base_url')
+        self.base_url = self.get_parameter_value('/fidelity/base_url')
 
     def _add_zero_days(self, df):
 
@@ -51,7 +51,7 @@ class Fidelity(Subclass):
 
         url = self.base_url + symbol.upper()
         df = pd.read_csv(url, index_col="Date").iloc[:-18]
-        df["Date"] = df.index
+        df["Date"] = pd.to_datetime(df.index)
         df = df.reset_index(drop=True)
         df.columns = map(lambda x: x.lower(), df.columns)
         df["volume"] = df["volume"].astype(int)
